@@ -78,7 +78,7 @@ onMounted(() => {
   scene.add(fill)
 
   const loader = new GLTFLoader()
-  loader.load('/models/sw.glb', (gltf) => {
+  loader.load(`${import.meta.env.BASE_URL}models/sw.glb`, (gltf) => {
     model = gltf.scene
 
     // 置中並 scale 讓最大邊 = 2
@@ -101,6 +101,8 @@ onMounted(() => {
     const dist = (scaledSphere.radius / Math.tan(fovRad / 2)) * 1.15
     camera.position.set(0, scaledSphere.center.y, dist)
     camera.lookAt(0, scaledSphere.center.y, 0)
+  }, undefined, (err) => {
+    console.error('[CharacterSection] 模型載入失敗:', err)
   })
 
   const animate = () => {
