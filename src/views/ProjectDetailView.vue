@@ -69,6 +69,21 @@ const projects = [
       '加入分類篩選與 Web Audio API 音效',
     ],
   },
+  {
+    id: 5,
+    title: '城市旅遊導覽',
+    description: '以 Vue Router 打造的多頁式旅遊導覽網站：城市列表、各城市景點、景點詳細頁，並用 Pinia 管理狀態。',
+    image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80',
+    tags: ['Vue 3', 'Vue Router', 'Pinia'],
+    githubUrl: 'https://github.com',
+    demoUrl: import.meta.env.BASE_URL + 'city-travel/index.html',
+    itinerary: [
+      '設計城市列表、景點、詳細頁三層路由',
+      '用動態路由參數傳遞城市與景點 id',
+      '以 Pinia store 管理跨頁狀態',
+      '撰寫各頁面樣式與 RWD 排版',
+    ],
+  },
 ]
 
 const project = computed(() =>

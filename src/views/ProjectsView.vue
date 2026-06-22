@@ -42,6 +42,15 @@ const projects = [
     githubUrl: 'https://github.com',
     demoUrl: import.meta.env.BASE_URL + 'biology.html',
   },
+  {
+    id: 5, level: 5,
+    title: '城市旅遊導覽',
+    description: '以 Vue Router 打造的多頁式旅遊導覽：城市列表、各城市景點、景點詳細頁，並用 Pinia 管理狀態。',
+    image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=80',
+    tags: ['Vue 3', 'Vue Router', 'Pinia'],
+    githubUrl: 'https://github.com',
+    demoUrl: import.meta.env.BASE_URL + 'city-travel/index.html',
+  },
 ]
 
 const favorites = ref(new Set())
