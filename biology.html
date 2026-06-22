@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生物圖鑑</title>
+    <style>
+        /* --- 舊報紙與復古羊皮紙基礎設定 --- */
+        body {
+            /* 使用襯線體（Serif）營造印刷報紙的復古質感 */
+            font-family: "Times New Roman", "SimSun", "Songti TC", serif;
+            background-color: #f2e6d0; /* 泛黃紙張底色 */
+            /* 利用放射狀漸層模擬紙張邊緣泛黃、中間微亮的歲月感 */
+            background-image: radial-gradient(circle, #f5eaa2 0%, #e6d5b3 100%);
+            color: #1a1a1a;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        /* 針對平板與桌機畫面放大內距 */
+        @media (min-width: 768px) {
+            body {
+                padding: 2rem;
+            }
+        }
+
+        /* 禁止文字輸入區域被手動拉伸破壞排版 */
+        textarea {
+            resize: none;
+        }
+
+        /* --- 報紙印刷線條與排版 --- */
+        .app-container {
+            max-width: 72rem; /* 限制最大寬度約 1152px */
+            margin: 0 auto;
+        }
+
+        /* 雙實線報頭：傳統報紙常見的上下雙線設計 */
+        .newspaper-header {
+            border-top: 4px double #1a1a1a;
+            border-bottom: 4px double #1a1a1a;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        /* 報頭上方的橫向中繼資訊（如公報編號、日期等） */
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            font-weight: bold;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 0.25rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* 標題外框線 */
+        .header-title-box {
+            border: 2px solid #1a1a1a;
+            padding: 0.5rem 1.5rem;
+            display: inline-block;
+            background-color: rgba(26, 26, 26, 0.03);
+        }
+
+        /* 主標題：加粗、字距拉開，模擬頭條新聞 */
+        .header-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: 0.2em;
+        }
+
+        @media (min-width: 768px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* 副標題：斜體字 */
+        .header-subtitle {
+            font-size: 1rem;
+            margin: 0.5rem 0 0 0;
+            letter-spacing: 0.3em;
+            font-style: italic;
+        }
+
+        /* --- 版面網格 --- */
+        /* 預設手機為單欄，桌機轉為 3 欄佈局 */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .main-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        /* --- 報告填寫單 (表單) --- */
+        .report-card {
+            background: rgba(255, 255, 255, 0.4); /* 半透明白色，透出後方紙張漸層 */
+            border: 1px solid #1a1a1a;
+            padding: 1.5rem;
+            box-shadow: 2px 2px 0px #1a1a1a; /* 硬邊陰影，模擬老舊印刷活字疊印感 */
+        }
+
+        /* 在大螢幕下，表單佔據 3 欄中的 2 欄寬度 */
+        @media (min-width: 1024px) {
+            .report-card {
+                grid-column: span 2 / span 2;
+            }
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* 表單內部 Section 分類（虛線外框） */
+        .form-section {
+            border: 1px dashed rgba(26, 26, 26, 0.3);
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #333;
+            border-left: 4px solid #1a1a1a; /* 左側粗裝飾線 */
+            padding-left: 0.5rem;
+        }
+
+        .form-space {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        /* 表單輸入列（桌機橫開雙欄） */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0.75rem;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        /* 舊報紙風輸入框：除去現代感邊框，僅保留傳統下底線 */
+        .input-control {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #1a1a1a;
+            padding: 0.5rem 0.25rem;
+            font-family: inherit;
+            font-size: 1rem;
+            color: #1a1a1a;
+            box-sizing: border-box;
+        }
+
+        /* 聚焦時底線加粗 */
+        .input-control:focus {
+            outline: none;
+            border-bottom: 2px solid #1a1a1a;
+        }
+
+        /* 下拉選單去掉內建圓角 */
+        select.input-control {
+            border-radius: 0;
+        }
+
+        /* --- 評級指數區 --- */
+        .rating-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: rgba(26, 26, 26, 0.05);
+            padding: 0.75rem;
+            border: 1px dashed #1a1a1a;
+        }
+
+        .rating-row {
+            display: grid;
+            grid-template-columns: 6rem 1fr; /* 固定標籤寬度為 6rem，確保星星對齊 */
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rating-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            white-space: nowrap; /* 防止中括號文字因畫面縮小而折行 */
+        }
+
+        .star-rating {
+            display: inline-flex;
+            align-items: center;
+            font-size: 1.75rem;
+            user-select: none; /* 避免滑鼠連點時選取到 Emoji 文字 */
+        }
+
+        .icon-star {
+            cursor: pointer;
+            filter: grayscale(100%) opacity(40%); /* 預設灰階且半透明（未點亮） */
+            transition: transform 0.1s ease, filter 0.1s ease;
+            display: inline-block;
+            margin: 0 4px;
+        }
+
+        /* 滑鼠懸停放大 */
+        .icon-star:hover {
+            transform: scale(1.2);
+        }
+
+        /* 作用中的星星恢復正常色彩與亮度 */
+        .icon-star.active {
+            filter: none;
+        }
+        
+        /* 骷髏頭加個黑色小陰影增加立體感 */
+        .icon-star.skull.active {
+            filter: drop-shadow(1px 1px 0px #000);
+        }
+
+        /* --- 蓋章按鈕 --- */
+        .stamp-btn {
+            width: 100%;
+            background-color: #1a1a1a;
+            color: #f2e6d0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            padding: 0.75rem;
+            border: 2px solid #1a1a1a;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 3px 3px 0px #8b0000; /* 暗紅色立體陰影，模擬印泥戳章邊緣 */
+        }
+
+        .stamp-btn:hover {
+            background-color: #333;
+        }
+
+        /* 點擊時按鈕位移，製造實體按壓反饋 */
+        .stamp-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #8b0000;
+        }
+
+        /* --- 側邊數據統計欄 --- */
+        .stats-sidebar {
+            border: 1px solid #1a1a1a;
+            padding: 1.5rem;
+            background: rgba(26, 26, 26, 0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .stat-box {
+            border-bottom: 1px solid #1a1a1a;
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-title-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-icon {
+            font-size: 1.3rem;
+        }
+
+        .stat-title-text {
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        /* 加粗醒目的統計數字 */
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        /* 側邊欄公告佈局欄樣式（紅色警告調性） */
+        .notice-board {
+            margin-top: 1.5rem;
+            border: 1px dashed #8b0000;
+            padding: 0.75rem;
+            background: rgba(139, 0, 0, 0.03);
+        }
+
+        .notice-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #8b0000;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #8b0000;
+            padding-bottom: 0.25rem;
+            letter-spacing: 0.05em;
+        }
+
+        .notice-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .notice-item {
+            margin-bottom: 0.5rem;
+            padding-left: 0.75rem;
+            position: relative;
+        }
+
+        /* 使用特殊符號 ✦ 取代傳統清單圓點 */
+        .notice-item::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: #8b0000;
+        }
+
+        /* --- 剪報列表區 --- */
+        .archive-container {
+            border-top: 4px double #1a1a1a; /* 又是傳統雙實線隔離區塊 */
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .archive-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .archive-header {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .filter-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* 被選中的篩選按鈕樣式（加上底線） */
+        .filter-btn-active {
+            font-weight: bold;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* 未被選中的篩選按鈕樣式（降低透明度） */
+        .filter-btn-inactive {
+            opacity: 0.6;
+        }
+
+        .filter-btn-inactive:hover {
+            opacity: 1;
+        }
+
+        /* --- 剪報卡片網格 --- */
+        .clipping-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .clipping-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .clipping-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        /* 檔案剪報卡片本體 */
+        .clipping-card {
+            border: 1px solid #1a1a1a;
+            background: #fdfaf2; /* 比底色再更白一點的紙張色，突顯卡片 */
+            padding: 1rem;
+            position: relative;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease;
+        }
+
+        .clipping-card:hover {
+            transform: translateY(-2px); /* 懸停時稍微向上微浮 */
+        }
+
+        /* 舊照片包裝層（固定相片比例區塊） */
+        .photo-wrapper {
+            position: relative;
+            height: 13rem;
+            border: 1px solid #1a1a1a;
+            background-color: #ddd;
+            overflow: hidden;
+        }
+
+        /* 照片黑白復古濾鏡：將網路彩色圖片轉為黑白(100%)與微黃棕色調(sepia 30%) */
+        .photo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) sepia(30%) contrast(120%);
+        }
+
+        /* 照片十字摺痕與磨損光暈效果：利用偽元素疊加漸層，製造出相片對摺的白色痕跡與四周暗角 */
+        .photo-wrapper::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(to right, transparent 49%, rgba(255,255,255,0.6) 50%, transparent 51%), /* 縱向摺痕 */
+                linear-gradient(to bottom, transparent 49%, rgba(255,255,255,0.6) 50%, transparent 51%), /* 橫向摺痕 */
+                radial-gradient(circle, transparent 50%, rgba(0,0,0,0.15) 100%); /* 四周暈影 */
+            pointer-events: none; /* 避免遮擋滑鼠點擊事件 */
+        }
+
+        /* 卡片標籤容器（絕對定位在左上角） */
+        .card-badge-container {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .card-badge {
+            background: #1a1a1a;
+            color: #f2e6d0;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            font-weight: bold;
+        }
+        
+        .card-badge.type-badge {
+            background: #8b0000; /* 分類類型使用暗紅色標籤 */
+        }
+
+        /* 紅色「銷毀」復古戳章（絕對定位在右上角） */
+        .destroy-seal {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            border: 2px solid #8b0000;
+            color: #8b0000;
+            background: transparent;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.15rem 0.4rem;
+            transform: rotate(15deg); /* 刻意旋轉 15 度模擬手蓋印章的隨機感 */
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: all 0.1s ease;
+            user-select: none;
+        }
+
+        /* 懸停時反白 */
+        .destroy-seal:hover {
+            background: #8b0000;
+            color: #fdfaf2;
+        }
+
+        .card-body {
+            padding: 0.75rem 0;
+        }
+
+        /* 檔案編號樣式（淡化處理） */
+        .card-meta-id {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.7;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .card-ratings-display {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        /* 詳細描述區塊：加上左側裝飾粗線與微透背景 */
+        .card-desc {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            background: rgba(26,26,26,0.03);
+            border-left: 3px solid #1a1a1a;
+            padding: 0.5rem;
+            margin: 0.5rem 0 0 0;
+            word-break: break-all; /* 防止長英文或網址撐破排版 */
+        }
+
+        .card-footer {
+            padding-top: 0.5rem;
+        }
+
+        /* 展開/收起 報告的虛線按鈕 */
+        .toggle-report-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px dashed #1a1a1a;
+            padding: 0.375rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .toggle-report-btn:hover {
+            background: rgba(26,26,26,0.05);
+        }
+
+        /* --- 空白狀態顯示 --- */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            border: 2px dashed #1a1a1a;
+            background: rgba(26,26,26,0.01);
+        }
+
+        .empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.6;
+        }
+
+        .empty-text {
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app-container">
+        
+        <header class="newspaper-header">
+            <div class="header-meta">
+                <span>【 世紀奇聞分類調查公報 】</span>
+                <span>公報編號：第 2026-05-25 號</span>
+            </div>
+            <div class="header-title-box">
+                <h1 class="header-title">神奇生物圖鑑</h1>
+            </div>
+            <p class="header-subtitle">- 追蹤調查報告 -</p>
+        </header>
+
+        <div class="main-grid">
+            
+            <div class="report-card">
+                <h2 class="section-title">📝 填寫目擊報告 (REPORT FORM)</h2>
+                <form @submit.prevent="addCollectionWithSound" class="form-space">
+                    
+                    <div class="form-section">
+                        <div class="form-section-title">PART I. 基礎特徵與分類</div>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label class="input-label">【代號】</label>
+                                <input v-model.trim="form.name" type="text" placeholder="請輸入目標稱呼..." required
+                                    class="input-control">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">【生物類型】</label>
+                                <select v-model="form.type" required class="input-control">
+                                    <option value="" disabled hidden>請選擇生物類型</option>
+                                    <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row" style="margin-top: 0.75rem;">
+                            <div class="input-group">
+                                <label class="input-label">【出沒區域】</label>
+                                <select v-model="form.category" required class="input-control">
+                                    <option value="" disabled hidden>請選擇目擊地點</option>
+                                    <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">【證物照片網址】</label>
+                                <input v-model.trim="form.imagUrl" type="url" placeholder="請輸入相片 URL (例如 https://...)" required
+                                    class="input-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-section-title">PART II. 異常行為與屬性評估</div>
+                        <div class="input-group">
+                            <label class="input-label">【異常行為指控】</label>
+                            <textarea v-model.trim="form.shortDesc" rows="3" placeholder="請詳細記述該目標之奇特事蹟與危害..." required
+                                class="input-control"></textarea>
+                        </div>
+
+                        <div class="rating-container" style="margin-top: 1rem;">
+                            <div class="rating-row" @mouseleave="resetHover('danger')">
+                                <span class="rating-label">【危險指數】</span>   
+                                <div class="star-rating">
+                                    <span v-for="index in 5" :key="index" class="icon-star skull"
+                                        :class="{ active: index <= (hoverDangerRating || form.stars) }" 
+                                        @mouseover="setHover('danger', index)"
+                                        @click="setRating('danger', index)">
+                                        ☠️
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="rating-row" @mouseleave="resetHover('friendly')">
+                                <span class="rating-label">【友善指數】</span>   
+                                <div class="star-rating">
+                                    <span v-for="index in 5" :key="index" class="icon-star"
+                                        :class="{ active: index <= (hoverFriendlyRating || form.friendlyStars) }" 
+                                        @mouseover="setHover('friendly', index)"
+                                        @click="setRating('friendly', index)">
+                                        🌟
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="stamp-btn">
+                        ✉️ 蓋印並歸檔 (SUBMIT)
+                    </button>
+                </form>
+            </div>
+
+            <aside class="stats-sidebar">
+                <div>
+                    <h2 class="section-title" style="margin-bottom: 0;">📊 案卷統計</h2>
+                    
+                    <div class="stat-box">
+                        <div class="stat-title-content">
+                            <span class="stat-icon">📁</span>
+                            <span class="stat-title-text">已建檔宗數：</span>
+                        </div>
+                        <span class="stat-number">{{ totalCount }}</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-title-content">
+                            <span class="stat-icon">☠️</span>
+                            <span class="stat-title-text">平均威脅度：</span>
+                        </div>
+                        <span class="stat-number">
+                            {{ averageStars }} <span style="font-size: 1rem; font-weight: normal; opacity: 0.6;">/ 5</span>
+                        </span>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-title-content">
+                            <span class="stat-icon">🌟</span>
+                            <span class="stat-title-text">平均友善度：</span>
+                        </div>
+                        <span class="stat-number">
+                            {{ averageFriendlyStars }} <span style="font-size: 1rem; font-weight: normal; opacity: 0.6;">/ 5</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="notice-board">
+                    <div class="notice-title">⚠️ 威脅階級內部公告</div>
+                    <ul class="notice-list">
+                        <li class="notice-item"><strong>災惡型 / 傳說型：</strong>一經目擊需立刻通報，切勿單獨接觸。</li>
+                        <li class="notice-item"><strong>攻擊型：</strong>具備高度侵略性，請保持 3 公尺以上安全社交距離。</li>
+                        <li class="notice-item"><strong>偽裝型：</strong>善於隱藏於日常環境，請仔細比對證物相片。</li>
+                        <li class="notice-item"><strong>支援型：</strong>潛在威脅較低，但仍需維持定期追蹤與數據更新。</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+        <main class="archive-container">
+            <div class="archive-header">
+                <h2 class="section-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
+                    ⣿ 調查案卷列表 (ARCHIVES)
+                </h2>
+                
+                <div class="filter-wrapper">
+                    <span class="filter-label">區域檢索：</span>
+                    <button @click="currentFilter = '全部'" 
+                        :class="currentFilter === '全部' ? 'filter-btn filter-btn-active' : 'filter-btn filter-btn-inactive'">
+                        全部
+                    </button>
+                    <button v-for="cat in categories" :key="cat" @click="currentFilter = cat"
+                        :class="currentFilter === cat ? 'filter-btn filter-btn-active' : 'filter-btn filter-btn-inactive'">
+                        {{ cat }}
+                    </button>
+                </div>
+            </div>
+
+            <div v-if="filteredCollections.length > 0" class="clipping-grid">
+                <div v-for="(item, index) in filteredCollections" :key="item.id" class="clipping-card">
+                    
+                    <div>
+                        <div class="photo-wrapper">
+                            <img :src="item.imagUrl" alt="珍獸證物照片" class="photo-img">
+                            <div class="card-badge-container">
+                                <span class="card-badge">{{ item.category }}</span>
+                                <span v-if="item.type" class="card-badge type-badge">{{ item.type }}</span>
+                            </div>
+                            <button @click="deleteItemWithSound(item.id)" class="destroy-seal">
+                                ◤ 銷毀 ◢
+                            </button>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="card-meta-id">FILE NO. #{{ item.id.toString().slice(-6) }}</div>
+                            <h3 class="card-title">■ {{ item.name }}</h3>
+                            
+                            <div class="card-ratings-display">
+                                <div>威脅：<span v-for="n in 5" :key="'d-'+n">{{ n <= item.stars ? '☠️' : ' ' }}</span></div>
+                                <div>友善：<span v-for="n in 5" :key="'f-'+n">{{ n <= item.friendlyStars ? '🌟' : ' ' }}</span></div>
+                            </div>
+
+                            <p v-show="item.showDetail" class="card-desc">
+                                {{ item.shortDesc }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button @click="item.showDetail = !item.showDetail" class="toggle-report-btn">
+                            {{ item.showDetail ? '[-] 收起報告' : '[+] 展開詳細調查' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div v-else class="empty-state">
+                <div class="empty-icon">📭</div>
+                <p class="empty-text">當前查無 any 目擊紀錄，城市目前異常和平。</p>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        // 從 Vue 全域變數中解構出需要的組合式 API 方法
+        const { createApp, ref, computed } = Vue;
+        
+        createApp({
+            setup() {
+                // 基礎常數定義（用於下拉選單與過濾標籤）
+                const categories = ref(['公司', '學校', '網路', '超商', '其他']);
+                const types = ref(['攻擊型', '支援型', '偽裝型', '傳說型', '災惡型']);
+                const currentFilter = ref('全部'); // 當前選取的篩選區域條件
+
+                // 表單資料雙向綁定的初始反應式結構
+                const form = ref({
+                    name: '',
+                    category: '',
+                    type: '',
+                    imagUrl: '',
+                    shortDesc: '',
+                    stars: 0,
+                    friendlyStars: 0
+                });
+
+                // 預設的初始生物圖鑑內建數據
+                const collections = ref([
+                    {
+                        id: 1,
+                        name: '開會必睡的資深獸',
+                        category: '公司',
+                        type: '偽裝型',
+                        imagUrl: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=500&q=80',
+                        shortDesc: '一開會就進入冬眠狀態，但只要講到下班或分紅，眼睛會瞬間張開。',
+                        stars: 2,
+                        friendlyStars: 2,
+                        showDetail: false
+                    },
+                    {
+                        id: 2,
+                        name: '加班吸血獸',
+                        category: '公司',
+                        type: '災惡型',
+                        imagUrl: 'https://i.pinimg.com/1200x/5d/69/da/5d69da348298422cca2eeb800da591ca.jpg',
+                        shortDesc: '會吸走他人的下班時間。',
+                        stars: 3,
+                        friendlyStars: 1,
+                        showDetail: false
+                    }
+                ]);
+
+                // 用於暫存滑鼠懸停星星評分時的整數值（模擬動態预览亮起特效）
+                const hoverDangerRating = ref(0);
+                const hoverFriendlyRating = ref(0);
+
+                // --- Web Audio API 模擬物理音效邏輯 ---
+                let audioCtx = null;
+                // 初始化音訊上下文（瀏覽器安全規範限制：必須由使用者點擊等互動行為觸發）
+                const initAudio = () => {
+                    if (!audioCtx) {
+                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                };
+
+                // 1. 蓋章重低音效：利用三角形波（triangle）快速降低頻率，模擬紮實沉穩的印章重敲聲
+                const playStampSound = () => {
+                    initAudio();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    
+                    osc.type = 'triangle'; 
+                    osc.frequency.setValueAtTime(120, audioCtx.currentTime); // 起始頻率 120Hz
+                    osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 0.15); // 0.15秒內降至 10Hz
+                    
+                    gain.gain.setValueAtTime(0.8, audioCtx.currentTime); // 起始音量
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18); // 快速淡出
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.18);
+                };
+
+                // 2. 撕紙/銷毀沙沙聲：隨機產生白噪音（White Noise），加上帶通濾鏡（bandpass）模擬紙張撕裂的摩擦高頻聲
+                const playTearSound = () => {
+                    initAudio();
+                    const bufferSize = audioCtx.sampleRate * 0.12; // 播放長度僅約 0.12 秒
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    
+                    // 隨機填充 [-1, 1] 之間的浮點數製造噪音訊號
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = Math.random() * 2 - 1;
+                    }
+                    
+                    const noise = audioCtx.createBufferSource();
+                    noise.buffer = buffer;
+                    
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = 'bandpass'; // 帶通濾波器
+                    filter.frequency.value = 1000; // 鎖定 1000Hz 附近的頻率範圍
+                    
+                    const gain = audioCtx.createGain();
+                    gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+                    
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    noise.start();
+                    noise.stop(audioCtx.currentTime + 0.12);
+                };
+
+                // --- 表單與評等互動方法 ---
+                // 點擊決定最終分數
+                const setRating = (type, val) => {
+                    if (type === 'danger') form.value.stars = val;
+                    if (type === 'friendly') form.value.friendlyStars = val;
+                };
+                
+                // 滑鼠移入更新暫存亮起數值
+                const setHover = (type, val) => {
+                    if (type === 'danger') hoverDangerRating.value = val;
+                    if (type === 'friendly') hoverFriendlyRating.value = val;
+                };
+                
+                // 滑鼠移出歸零
+                const resetHover = (type) => {
+                    if (type === 'danger') hoverDangerRating.value = 0;
+                    if (type === 'friendly') hoverFriendlyRating.value = 0;
+                };
+
+                // 處理表單提交：蓋印並歸檔
+                const addCollectionWithSound = () => {
+                    try { playStampSound(); } catch(e){} // 執行音效防錯
+
+                    // 推入新物件至 collections 陣列中
+                    collections.value.push({
+                        id: Date.now(), // 採用時間戳記作為不重複 ID
+                        name: form.value.name,
+                        category: form.value.category,
+                        type: form.value.type,
+                        imagUrl: form.value.imagUrl,
+                        shortDesc: form.value.shortDesc,
+                        stars: Number(form.value.stars),
+                        friendlyStars: Number(form.value.friendlyStars),
+                        showDetail: false // 預設詳細細節為隱藏狀態
+                    });
+
+                    // 重置表單狀態與數值
+                    form.value = {
+                        name: '',
+                        category: '',
+                        type: '',
+                        imagUrl: '',
+                        shortDesc: '',
+                        stars: 0,
+                        friendlyStars: 0
+                    };
+                    hoverDangerRating.value = 0;
+                    hoverFriendlyRating.value = 0;
+                };
+
+                // 處理銷毀卡片：移除陣列中指定 ID 的資料
+                const deleteItemWithSound = (id) => {
+                    try { playTearSound(); } catch(e){}
+                    collections.value = collections.value.filter(item => item.id !== id);
+                };
+
+                // --- 計算屬性 (Computed) ---
+                // 根據當前選擇的區域標籤過濾回傳的資料
+                const filteredCollections = computed(() => {
+                    if (currentFilter.value === '全部') {
+                        return collections.value;
+                    }
+                    return collections.value.filter(item => item.category === currentFilter.value);
+                });
+
+                // 計算當前總建檔宗數
+                const totalCount = computed(() => {
+                    return collections.value.length;
+                });
+
+                // 計算平均危險威脅指數（保留一位小數）
+                const averageStars = computed(() => {
+                    if (collections.value.length === 0) return 0;
+                    const sum = collections.value.reduce((total, item) => total + item.stars, 0);
+                    return (sum / collections.value.length).toFixed(1);
+                });
+
+                // 計算平均友善度指數（保留一位小數）
+                const averageFriendlyStars = computed(() => {
+                    if (collections.value.length === 0) return 0;
+                    const sum = collections.value.reduce((total, item) => total + item.friendlyStars, 0);
+                    return (sum / collections.value.length).toFixed(1);
+                });
+
+                // 回傳提供給 HTML 模板端存取的變數與方法
+                return {
+                    categories,
+                    types,
+                    currentFilter,
+                    form,
+                    collections,
+                    hoverDangerRating,
+                    hoverFriendlyRating,
+                    setRating,
+                    setHover,
+                    resetHover,
+                    addCollectionWithSound,
+                    deleteItemWithSound,
+                    filteredCollections,
+                    totalCount,
+                    averageStars,
+                    averageFriendlyStars
+                };
+            }
+        }).mount('#app'); // 將實體掛載至網頁中 id 為 app 的節點
+    </script>
+</body>
+
+</html>
