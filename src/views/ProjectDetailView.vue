@@ -54,6 +54,21 @@ const projects = [
       '加入攝氏 / 華氏溫度切換功能',
     ],
   },
+  {
+    id: 4,
+    title: '神奇生物圖鑑',
+    description: '報紙剪報風格的主題收藏館：填寫調查表單、星級評分（危險度 / 友善度）、即時統計與分類篩選，並用 Web Audio API 模擬蓋章與撕毀音效。',
+    image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=800&q=80',
+    tags: ['Vue 3', 'Web Audio API', 'CSS'],
+    githubUrl: 'https://github.com',
+    demoUrl: import.meta.env.BASE_URL + 'biology.html',
+    itinerary: [
+      '設計報紙剪報風格的版面與 CSS 樣式',
+      '實作收藏表單與星級評分元件',
+      '用 computed 計算總數與平均危險 / 友善度',
+      '加入分類篩選與 Web Audio API 音效',
+    ],
+  },
 ]
 
 const project = computed(() =>

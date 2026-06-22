@@ -33,6 +33,15 @@ const projects = [
     githubUrl: 'https://github.com',
     demoUrl: 'https://example.com',
   },
+  {
+    id: 4, level: 5,
+    title: '神奇生物圖鑑',
+    description: '報紙剪報風格的主題收藏館，可填寫調查表單、星級評分、即時統計與分類篩選，並用 Web Audio API 模擬蓋章音效。',
+    image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=400&q=80',
+    tags: ['Vue 3', 'Web Audio API', 'RWD'],
+    githubUrl: 'https://github.com',
+    demoUrl: import.meta.env.BASE_URL + 'biology.html',
+  },
 ]
 
 const favorites = ref(new Set())
