@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任務管理 App</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
+            background: #F3E9D2;
+            color: #2A1F0E;
+            margin: 0;
+            padding: 1.5rem 1rem 3rem;
+            min-height: 100vh;
+        }
+
+        .wrap {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+        }
+
+        .header p {
+            margin: 0.35rem 0 0;
+            font-size: 0.9rem;
+            opacity: 0.65;
+        }
+
+        .card {
+            background: #FAF3E0;
+            border: 2.5px solid #2A1F0E;
+            border-radius: 12px;
+            box-shadow: 4px 4px 0 #2A1F0E;
+            padding: 1.1rem 1.15rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .add-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .add-row input {
+            flex: 1;
+            min-width: 0;
+            border: 2px solid #2A1F0E;
+            border-radius: 8px;
+            padding: 0.6rem 0.7rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            background: #fff;
+            color: #2A1F0E;
+        }
+
+        .add-row input:focus { outline: 2px solid #E8883A; }
+
+        .btn {
+            border: 2px solid #2A1F0E;
+            border-radius: 8px;
+            background: #E8883A;
+            color: #FAF3E0;
+            font-weight: 800;
+            font-size: 0.95rem;
+            font-family: inherit;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            box-shadow: 2px 2px 0 #2A1F0E;
+            white-space: nowrap;
+            transition: all 0.1s;
+        }
+
+        .btn:hover { transform: translate(2px, 2px); box-shadow: none; }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .filters { display: flex; gap: 0.35rem; }
+
+        .filter-btn {
+            border: 2px solid #2A1F0E;
+            border-radius: 999px;
+            background: #FAF3E0;
+            color: #2A1F0E;
+            font-weight: 700;
+            font-size: 0.82rem;
+            font-family: inherit;
+            padding: 0.28rem 0.8rem;
+            cursor: pointer;
+        }
+
+        .filter-btn.active { background: #2A1F0E; color: #FAF3E0; }
+
+        .count { font-size: 0.85rem; font-weight: 700; opacity: 0.75; }
+
+        ul.list { list-style: none; margin: 0; padding: 0; }
+
+        li.item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            background: #fff;
+            border: 2px solid #2A1F0E;
+            border-radius: 10px;
+            padding: 0.65rem 0.75rem;
+            margin-bottom: 0.6rem;
+            cursor: grab;
+            transition: box-shadow 0.1s, opacity 0.1s;
+        }
+
+        li.item.dragging { opacity: 0.4; }
+        li.item.drag-over { box-shadow: 0 -3px 0 #E8883A; }
+
+        .grip { color: #B89B6E; font-size: 1.1rem; cursor: grab; user-select: none; }
+
+        .check {
+            width: 22px; height: 22px;
+            border: 2px solid #2A1F0E;
+            border-radius: 6px;
+            background: #FAF3E0;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem; font-weight: 900;
+            color: #2A1F0E;
+            flex-shrink: 0;
+        }
+
+        .item.done .check { background: #4CAF50; color: #fff; border-color: #2A1F0E; }
+
+        .text { flex: 1; min-width: 0; font-size: 0.95rem; word-break: break-word; }
+        .item.done .text { text-decoration: line-through; opacity: 0.5; }
+
+        .del {
+            border: none; background: none; cursor: pointer;
+            font-size: 1.1rem; color: #C0392B; flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .empty {
+            text-align: center; padding: 2rem 1rem;
+            opacity: 0.55; font-style: italic;
+        }
+
+        .hint { text-align: center; font-size: 0.78rem; opacity: 0.5; margin-top: 0.4rem; }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrap">
+        <div class="header">
+            <h1>📋 任務管理 App</h1>
+            <p>新增 · 完成 · 刪除 · 拖曳排序，資料自動儲存於瀏覽器</p>
+        </div>
+
+        <div class="card">
+            <form class="add-row" @submit.prevent="addTask">
+                <input v-model.trim="draft" type="text" placeholder="輸入新任務，按 Enter 或「新增」..." maxlength="100">
+                <button type="submit" class="btn">新增</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="toolbar">
+                <div class="filters">
+                    <button class="filter-btn" :class="{ active: filter === 'all' }" @click="filter = 'all'">全部</button>
+                    <button class="filter-btn" :class="{ active: filter === 'active' }" @click="filter = 'active'">未完成</button>
+                    <button class="filter-btn" :class="{ active: filter === 'done' }" @click="filter = 'done'">已完成</button>
+                </div>
+                <span class="count">剩餘 {{ remaining }} 項</span>
+            </div>
+
+            <ul class="list" v-if="visibleTasks.length">
+                <li v-for="task in visibleTasks" :key="task.id" class="item"
+                    :class="{ done: task.done, dragging: dragId === task.id, 'drag-over': overId === task.id }"
+                    draggable="true"
+                    @dragstart="onDragStart(task.id)"
+                    @dragover.prevent="onDragOver(task.id)"
+                    @drop="onDrop(task.id)"
+                    @dragend="onDragEnd">
+                    <span class="grip">⠿</span>
+                    <span class="check" @click="toggle(task)">{{ task.done ? '✓' : '' }}</span>
+                    <span class="text">{{ task.text }}</span>
+                    <button class="del" @click="remove(task.id)" title="刪除">🗑️</button>
+                </li>
+            </ul>
+
+            <div v-else class="empty">目前沒有任務，從上面新增一個吧！</div>
+            <div class="hint">提示：按住任一任務即可上下拖曳排序</div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref, computed, watch } = Vue;
+        const STORE_KEY = 'portfolio-todo-tasks';
+
+        createApp({
+            setup() {
+                const load = () => {
+                    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
+                    catch (e) { return []; }
+                };
+
+                const tasks = ref(load());
+                const draft = ref('');
+                const filter = ref('all');
+                const dragId = ref(null);
+                const overId = ref(null);
+
+                // 任務變動時即時寫回 localStorage（持久化）
+                watch(tasks, (val) => {
+                    localStorage.setItem(STORE_KEY, JSON.stringify(val));
+                }, { deep: true });
+
+                const addTask = () => {
+                    if (!draft.value) return;
+                    tasks.value.push({ id: Date.now(), text: draft.value, done: false });
+                    draft.value = '';
+                };
+
+                const toggle = (task) => { task.done = !task.done; };
+                const remove = (id) => { tasks.value = tasks.value.filter(t => t.id !== id); };
+
+                // --- 拖曳排序邏輯 ---
+                const onDragStart = (id) => { dragId.value = id; };
+                const onDragOver = (id) => { overId.value = id; };
+                const onDragEnd = () => { dragId.value = null; overId.value = null; };
+                const onDrop = (targetId) => {
+                    const from = tasks.value.findIndex(t => t.id === dragId.value);
+                    const to = tasks.value.findIndex(t => t.id === targetId);
+                    if (from === -1 || to === -1 || from === to) return;
+                    const [moved] = tasks.value.splice(from, 1);
+                    tasks.value.splice(to, 0, moved);
+                    onDragEnd();
+                };
+
+                const visibleTasks = computed(() => {
+                    if (filter.value === 'active') return tasks.value.filter(t => !t.done);
+                    if (filter.value === 'done') return tasks.value.filter(t => t.done);
+                    return tasks.value;
+                });
+
+                const remaining = computed(() => tasks.value.filter(t => !t.done).length);
+
+                return {
+                    tasks, draft, filter, dragId, overId,
+                    addTask, toggle, remove,
+                    onDragStart, onDragOver, onDragEnd, onDrop,
+                    visibleTasks, remaining
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
