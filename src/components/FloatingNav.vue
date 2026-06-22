@@ -47,8 +47,10 @@ const close = () => { open.value = false }
 <style scoped>
 .fab-root {
   position: fixed;
-  right: 1.1rem;
-  bottom: 1.1rem;
+  /* 桌機：浮在右下空白區，離右邊緣有距離，固定於畫面 */
+  /* 在原比例基礎上，往右、往下各移 1.5 顆按鈕（56px × 1.5 = 84px） */
+  right: calc(28% - 84px);
+  bottom: calc(32% - 84px);
   z-index: 200;
 }
 
@@ -161,8 +163,18 @@ const close = () => { open.value = false }
   transform: translateY(10px) scale(0.9);
 }
 
+/* 平板 / 手機：改回右下角，但往上抬約 2 顆按鈕的高度 */
+@media (max-width: 768px) {
+  .fab-root {
+    top: auto;
+    transform: none;
+    right: 1rem;
+    bottom: 7rem;
+  }
+}
+
 @media (max-width: 480px) {
-  .fab-root { right: 0.9rem; bottom: 0.9rem; }
+  .fab-root { right: 0.9rem; bottom: 6.5rem; }
   .fab-main { width: 50px; height: 50px; font-size: 1.7rem; }
   .fab-menu { bottom: 62px; }
 }
