@@ -74,4 +74,27 @@ defineProps({
   box-shadow: 3px 3px 0 #2A1F0E;
   flex-shrink: 0;
 }
+
+/* ── RWD：手機 ── */
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 1.1rem;
+    gap: 1rem;
+    box-shadow: 4px 4px 0 #2A1F0E;
+  }
+  .greeting {
+    font-size: 1.25rem;
+    margin-bottom: 0.7rem;
+  }
+  .tag-list li { font-size: 0.85rem; }
+  .avatar {
+    width: 90px;
+    height: 116px;
+  }
+}
+
+@media (max-width: 360px) {
+  .greeting { font-size: 1.1rem; }
+  .avatar { width: 78px; height: 100px; }
+}
 </style>

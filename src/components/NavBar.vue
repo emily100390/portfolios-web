@@ -73,4 +73,24 @@
   background: #2A1F0E;
   color: #F2E6C9;
 }
+
+/* ── RWD：手機 ── */
+@media (max-width: 480px) {
+  .banner-top {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.5rem;
+    letter-spacing: 0.04em;
+  }
+  .banner-divider { margin: 0 0.3rem; }
+  .warning-bar {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+  }
+  .navbar a {
+    padding: 0.45rem 0;
+    flex: 1;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+}
 </style>

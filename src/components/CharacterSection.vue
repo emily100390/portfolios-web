@@ -38,6 +38,11 @@
             <p class="exp-desc">{{ exp.desc }}</p>
           </div>
         </div>
+
+        <!-- 面板底部收起按鈕，讀完可就近收合 -->
+        <div class="exp-footer">
+          <button class="btn-collapse" @click="showExp = false">▲ 收起經歷</button>
+        </div>
       </div>
     </Transition>
 
@@ -306,6 +311,33 @@ const experiences = [
   color: #3D2B1F;
 }
 
+/* ── 面板底部收起按鈕 ── */
+.exp-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1.5px dashed rgba(42, 31, 14, 0.25);
+}
+
+.btn-collapse {
+  background: transparent;
+  border: 2px solid #2A1F0E;
+  border-radius: 6px;
+  padding: 0.38rem 1.1rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.82rem;
+  font-family: inherit;
+  color: #2A1F0E;
+  transition: all 0.1s;
+}
+
+.btn-collapse:hover {
+  background: #2A1F0E;
+  color: #FAF3E0;
+}
+
 /* ── 人格特質球 ── */
 .trait-ball {
   position: absolute;
@@ -354,5 +386,29 @@ const experiences = [
 .slide-down-leave-to {
   opacity: 0;
   transform: translateY(-8px);
+}
+
+/* ── RWD：小螢幕縮小 3D 舞台，避免超出畫面 ── */
+@media (max-width: 360px) {
+  .char-stage {
+    width: 280px;
+    height: 280px;
+  }
+  .char-canvas {
+    width: 260px !important;
+    height: 260px !important;
+  }
+  .ring-a { width: 274px; height: 274px; }
+  .ring-b { width: 236px; height: 236px; }
+  .trait-ball {
+    width: 56px;
+    height: 56px;
+    font-size: 0.66rem;
+  }
+  .trait-tl, .trait-bl { left: 8px; }
+  .trait-tr, .trait-br { right: 8px; }
+  .trait-tl, .trait-tr { top: 8px; }
+  .trait-bl, .trait-br { bottom: 8px; }
+  .exp-panel { padding: 1rem 1.1rem; }
 }
 </style>

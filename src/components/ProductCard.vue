@@ -114,4 +114,26 @@ const emit = defineEmits(['view-detail', 'toggle-favorite'])
   font-size: 1.1rem;
   line-height: 1;
 }
+
+/* ── RWD：手機 ── */
+@media (max-width: 480px) {
+  .project-card {
+    padding: 0.85rem;
+    gap: 0.75rem;
+  }
+  .card-img {
+    width: 72px;
+    height: 56px;
+  }
+  .card-title { font-size: 0.92rem; }
+  .card-desc { font-size: 0.76rem; }
+  .btn-view {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-img { display: none; } /* 極窄螢幕隱藏縮圖，留空間給文字 */
+}
 </style>
