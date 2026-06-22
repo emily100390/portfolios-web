@@ -99,6 +99,21 @@ const projects = [
       '撰寫互動樣式與點擊判定',
     ],
   },
+  {
+    id: 7,
+    title: '會員資料小卡',
+    description: '以 Vue 3 打造的會員資料卡：表單輸入透過雙向綁定即時更新，動態預覽概念藝術風格的個人化會員卡片。',
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80',
+    tags: ['Vue 3', 'HTML', 'CSS'],
+    githubUrl: 'https://github.com',
+    demoUrl: import.meta.env.BASE_URL + 'member-card.html',
+    itinerary: [
+      '設計會員卡的版面與概念藝術風格',
+      '用 v-model 實作表單即時雙向綁定',
+      '依輸入內容動態渲染卡片預覽',
+      '撰寫互動樣式與 RWD 排版',
+    ],
+  },
 ]
 
 const project = computed(() =>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會員資料卡-Concept Art</title>
+    <style>
+        /* 全域概念藝術風格設定 (深色調、螢光霓虹與細緻邊框) */
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        #app {
+            display: flex;
+            gap: 40px;
+            padding: 20px;
+        }
+
+        /* 輸入表單區塊 */
+        .card01 {
+            width: 400px;
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .card01 h1 {
+            font-size: 1.5rem;
+            color: #58a6ff;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group span, .form-group p {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: #8b949e;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="url"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #f0f6fc;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #58a6ff;
+            outline: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* 會員小卡預覽區塊 - 基礎樣式 */
+        .card02 {
+            width: 350px;
+            background: linear-gradient(145deg, #1f242c, #0d1117);
+            border: 2px solid #58a6ff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            
+            /* 調整 1：將卡片內容改為 Flex 佈局並水平置中 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* 會員小卡預覽區塊 - VIP 樣式 */
+        .card02.vip-mode {
+            background: linear-gradient(145deg, #2d2206, #140f03);
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .card02 h2 {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-top: 0;
+            color: #58a6ff;
+        }
+
+        .card02.vip-mode h2 {
+            color: #ffd700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+        }
+
+        /* 頭像外框 */
+        .box {
+            width: 110px;
+            height: 110px;
+            border: 3px solid #58a6ff;
+            border-radius: 50%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            margin: 20px 0;
+            transition: border-color 0.5s;
+        }
+
+        .card02.vip-mode .box {
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        /* 調整 1：文字區塊寬度填滿，並取消原本靠左的邊框改為底部邊框來契合置中風格 */
+        .card02 p {
+            width: 100%;
+            margin: 8px 0;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 6px;
+        }
+
+        .card02.vip-mode p {
+            border-bottom-color: #3a2f14;
+        }
+
+        /* 詳細資料包裝盒也需維持寬度 */
+        .detail-info {
+            width: 100%;
+        }
+
+        /* 提示未輸入時的佔位美化 */
+        .placeholder-text {
+            width: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #30363d;
+            border-radius: 16px;
+            color: #8b949e;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="card01">
+            <h1>輸入表單</h1>
+            
+            <div class="form-group">
+                <span>姓名:</span>
+                <input id="name" type="text" v-model.trim="name" placeholder="請輸入姓名">
+            </div>
+
+            <div class="form-group">
+                <span>年齡 (0~130):</span>
+                <input id="age" type="number" min="0" max="130" v-model.number="age" @input="validateAge" placeholder="請輸入年齡">
+            </div>
+
+            <div class="form-group">
+                <span>會員等級:</span>
+                <select name="level" id="level" v-model="level">
+                    <option value="" hidden>請選擇</option>
+                    <option value="一般會員">一般會員</option>
+                    <option value="白金會員">白金會員</option>
+                    <option value="鑽石會員">鑽石會員</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <p>頭像圖片網址:</p>
+                <input id="url" type="url" v-model.trim="url" placeholder="請貼上圖片網址">
+            </div>
+
+            <div class="form-group checkbox-group">
+                <input id="checkbox1" type="checkbox" v-model="checkbox1">
+                <label id="label-cb1" for="checkbox1">顯示詳細資料</label>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <input id="vip" type="checkbox" v-model="vip">
+                <label id="label-vip" for="vip">啟用 VIP 模式</label>
+            </div>
+        </div>
+
+        <div v-if="name" :class="['card02', { 'vip-mode': vip }]">
+            <h2 v-if="vip">✦ VIP PREVIEW ✦</h2>
+            <h2 v-else>MEMBER PREVIEW</h2>
+            
+            <div class="box" :style="{ backgroundImage: `url(${avatarUrl})` }"></div>
+            
+            <p><strong>姓名：</strong>{{ name }}</p>
+            <p><strong>年齡：</strong>{{ (age !== '' && !isNaN(age)) ? age + ' 歲' : '未填寫' }}</p>
+            <p><strong>等級：</strong>{{ level || '未選擇' }}</p>
+            
+            <div v-show="checkbox1" class="detail-info">
+                <p><strong>網址：</strong>{{ url || '無' }}</p>
+                <p><strong>VIP 狀態：</strong>{{ vip ? '已啟用' : '未啟用' }}</p>
+            </div>
+        </div>
+
+        <div v-else class="placeholder-text">
+            <p>請於左側輸入「姓名」以生成會員小卡</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp, ref, computed } = Vue;
+
+        /**
+         * 啟動 Vue 應用程式的根組件設定
+         * @returns {Object} 回傳提供給 HTML 模板使用的響應式變數、計算屬性與方法
+         */
+        const app = createApp({
+            setup() {
+                /** @type {import('vue').Ref<string>} 會員姓名 */
+                const name = ref('');
+                
+                /** @type {import('vue').Ref<number|string>} 會員年齡 */
+                const age = ref('');
+                
+                /** @type {import('vue').Ref<string>} 會員等級 */
+                const level = ref('');
+                
+                /** @type {import('vue').Ref<string>} 頭像圖片網址 */
+                const url = ref('');
+                
+                /** @type {import('vue').Ref<boolean>} 是否顯示詳細資料 */
+                const checkbox1 = ref(false);
+                
+                /** @type {import('vue').Ref<boolean>} 是否啟用 VIP 模式 */
+                const vip = ref(false);
+
+                /**
+                 * 計算屬性：動態輸出頭像網址
+                 * @description 當使用者未輸入網址時，提供預設的動態圖檔
+                 * @returns {string} 最終輸出的圖片網址
+                 */
+                const avatarUrl = computed(() => {
+                    return url.value || 'https://64.media.tumblr.com/6dd1c1d273f102954238597ae94b3c7d/tumblr_o8h71xt3Hh1qzomoco1_540.gifv';
+                });
+
+                /**
+                 * 方法：限制年齡輸入數值在 0 到 130 之間
+                 * @description 監聽 input 事件，當輸入值超過範圍時自動修正為邊界值
+                 * @returns {void}
+                 */
+                const validateAge = () => {
+                    if (age.value === '') return;
+                    if (age.value < 0) age.value = 0;
+                    if (age.value > 130) age.value = 130;
+                };
+
+                return {
+                    name,
+                    age,
+                    level,
+                    url,
+                    checkbox1,
+                    vip,
+                    avatarUrl,
+                    validateAge
+                };
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>

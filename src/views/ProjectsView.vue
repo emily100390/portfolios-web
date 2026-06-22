@@ -60,6 +60,15 @@ const projects = [
     githubUrl: 'https://github.com',
     demoUrl: import.meta.env.BASE_URL + 'color-test.html',
   },
+  {
+    id: 7, level: 4,
+    title: '會員資料小卡',
+    description: '以 Vue 3 打造的會員資料卡，輸入即時雙向綁定，動態預覽概念藝術風格的個人化會員卡片。',
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=400&q=80',
+    tags: ['Vue 3', 'HTML', 'CSS'],
+    githubUrl: 'https://github.com',
+    demoUrl: import.meta.env.BASE_URL + 'member-card.html',
+  },
 ]
 
 const favorites = ref(new Set())
