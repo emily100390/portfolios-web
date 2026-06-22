@@ -1,10 +1,12 @@
 <script setup>
 import NavBar from './components/NavBar.vue'
+import FloatingNav from './components/FloatingNav.vue'
 </script>
 
 <template>
   <NavBar />
   <RouterView />
+  <FloatingNav />
 </template>
 
 <style>
