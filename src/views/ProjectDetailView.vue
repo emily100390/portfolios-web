@@ -84,6 +84,21 @@ const projects = [
       '撰寫各頁面樣式與 RWD 排版',
     ],
   },
+  {
+    id: 6,
+    title: '色彩敏銳度測試',
+    description: '純 JavaScript 打造的色弱小遊戲：在一片色塊中找出顏色略微不同的那一格，隨關卡提升難度，訓練色彩辨識力。',
+    image: 'https://images.unsplash.com/photo-1502691876148-a84978e59af8?auto=format&fit=crop&w=800&q=80',
+    tags: ['JavaScript', 'HTML', 'CSS'],
+    githubUrl: 'https://github.com',
+    demoUrl: import.meta.env.BASE_URL + 'color-test.html',
+    itinerary: [
+      '用 JavaScript 動態產生色塊格子',
+      '計算每關的目標色與差異色',
+      '加入計分與關卡難度遞增邏輯',
+      '撰寫互動樣式與點擊判定',
+    ],
+  },
 ]
 
 const project = computed(() =>

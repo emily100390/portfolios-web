@@ -51,6 +51,15 @@ const projects = [
     githubUrl: 'https://github.com',
     demoUrl: import.meta.env.BASE_URL + 'city-travel/index.html',
   },
+  {
+    id: 6, level: 4,
+    title: '色彩敏銳度測試',
+    description: '純 JavaScript 打造的色弱小遊戲：在色塊中找出顏色不同的那一格，難度逐關提升，訓練色彩辨識力。',
+    image: 'https://images.unsplash.com/photo-1502691876148-a84978e59af8?auto=format&fit=crop&w=400&q=80',
+    tags: ['JavaScript', 'HTML', 'CSS'],
+    githubUrl: 'https://github.com',
+    demoUrl: import.meta.env.BASE_URL + 'color-test.html',
+  },
 ]
 
 const favorites = ref(new Set())
