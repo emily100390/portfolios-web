@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天氣查詢儀表板</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
+            background: #F3E9D2;
+            color: #2A1F0E;
+            margin: 0;
+            padding: 1.5rem 1rem 3rem;
+            min-height: 100vh;
+        }
+
+        .wrap { max-width: 640px; margin: 0 auto; }
+
+        .header { text-align: center; margin-bottom: 1.4rem; }
+        .header h1 { margin: 0; font-size: 1.8rem; font-weight: 900; }
+        .header p { margin: 0.35rem 0 0; font-size: 0.88rem; opacity: 0.65; }
+
+        .card {
+            background: #FAF3E0;
+            border: 2.5px solid #2A1F0E;
+            border-radius: 12px;
+            box-shadow: 4px 4px 0 #2A1F0E;
+            padding: 1.1rem 1.15rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .search-row { display: flex; gap: 0.5rem; }
+
+        .search-row input {
+            flex: 1; min-width: 0;
+            border: 2px solid #2A1F0E; border-radius: 8px;
+            padding: 0.6rem 0.7rem; font-size: 0.95rem; font-family: inherit;
+            background: #fff; color: #2A1F0E;
+        }
+        .search-row input:focus { outline: 2px solid #E8883A; }
+
+        .btn {
+            border: 2px solid #2A1F0E; border-radius: 8px;
+            background: #E8883A; color: #FAF3E0;
+            font-weight: 800; font-size: 0.95rem; font-family: inherit;
+            padding: 0.6rem 1rem; cursor: pointer;
+            box-shadow: 2px 2px 0 #2A1F0E; white-space: nowrap; transition: all 0.1s;
+        }
+        .btn:hover { transform: translate(2px, 2px); box-shadow: none; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 2px 2px 0 #2A1F0E; }
+
+        .quick { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+        .chip {
+            border: 2px solid #2A1F0E; border-radius: 999px; background: #FAF3E0;
+            font-weight: 700; font-size: 0.8rem; font-family: inherit;
+            padding: 0.25rem 0.75rem; cursor: pointer;
+        }
+        .chip:hover { background: #2A1F0E; color: #FAF3E0; }
+
+        .toggle-row { display: flex; justify-content: flex-end; margin-bottom: 0.6rem; }
+        .unit-toggle { display: flex; border: 2px solid #2A1F0E; border-radius: 999px; overflow: hidden; }
+        .unit-toggle button {
+            border: none; background: #FAF3E0; color: #2A1F0E;
+            font-weight: 800; font-family: inherit; font-size: 0.82rem;
+            padding: 0.25rem 0.8rem; cursor: pointer;
+        }
+        .unit-toggle button.active { background: #2A1F0E; color: #FAF3E0; }
+
+        .current { display: flex; align-items: center; gap: 1rem; }
+        .cur-icon { font-size: 3.4rem; line-height: 1; }
+        .cur-main { flex: 1; }
+        .cur-city { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.15rem; }
+        .cur-temp { font-size: 2.6rem; font-weight: 900; line-height: 1; }
+        .cur-desc { font-size: 0.9rem; opacity: 0.75; margin-top: 0.2rem; }
+
+        .cur-meta { display: flex; gap: 1.25rem; margin-top: 0.9rem; padding-top: 0.85rem; border-top: 1.5px dashed #B89B6E; font-size: 0.85rem; }
+        .cur-meta b { display: block; font-size: 1rem; }
+
+        .section-label { font-weight: 900; font-size: 0.95rem; margin: 0 0 0.8rem; }
+
+        .forecast { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
+        @media (max-width: 480px) { .forecast { grid-template-columns: repeat(2, 1fr); } }
+
+        .day {
+            background: #fff; border: 2px solid #2A1F0E; border-radius: 10px;
+            padding: 0.6rem 0.3rem; text-align: center;
+        }
+        .day-name { font-weight: 800; font-size: 0.82rem; margin-bottom: 0.25rem; }
+        .day-icon { font-size: 1.7rem; line-height: 1.2; }
+        .day-temp { font-size: 0.82rem; margin-top: 0.25rem; }
+        .day-temp .hi { font-weight: 800; }
+        .day-temp .lo { opacity: 0.55; }
+
+        .status { text-align: center; padding: 1.5rem 1rem; opacity: 0.65; }
+        .status.error { color: #C0392B; opacity: 1; font-weight: 700; }
+        .footnote { text-align: center; font-size: 0.75rem; opacity: 0.5; margin-top: 0.5rem; }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="wrap">
+        <div class="header">
+            <h1>⛅ 天氣查詢儀表板</h1>
+            <p>輸入城市名稱，即時顯示目前天氣與五日預報</p>
+        </div>
+
+        <div class="card">
+            <form class="search-row" @submit.prevent="search()">
+                <input v-model.trim="query" type="text" placeholder="輸入城市，例如：台北、Tokyo、London...">
+                <button type="submit" class="btn" :disabled="loading">{{ loading ? '查詢中' : '查詢' }}</button>
+            </form>
+            <div class="quick">
+                <button v-for="c in quickCities" :key="c.name" class="chip" @click="searchCity(c)">{{ c.label }}</button>
+            </div>
+        </div>
+
+        <div v-if="status" class="card">
+            <div class="status" :class="{ error: isError }">{{ status }}</div>
+        </div>
+
+        <div v-if="current" class="card">
+            <div class="toggle-row">
+                <div class="unit-toggle">
+                    <button :class="{ active: unit === 'C' }" @click="unit = 'C'">°C</button>
+                    <button :class="{ active: unit === 'F' }" @click="unit = 'F'">°F</button>
+                </div>
+            </div>
+
+            <div class="current">
+                <div class="cur-icon">{{ wmo(current.code).icon }}</div>
+                <div class="cur-main">
+                    <div class="cur-city">{{ place }}</div>
+                    <div class="cur-temp">{{ showTemp(current.temp) }}°{{ unit }}</div>
+                    <div class="cur-desc">{{ wmo(current.code).text }}</div>
+                </div>
+            </div>
+
+            <div class="cur-meta">
+                <div>濕度<b>{{ current.humidity }}%</b></div>
+                <div>風速<b>{{ current.wind }} km/h</b></div>
+            </div>
+        </div>
+
+        <div v-if="daily.length" class="card">
+            <div class="section-label">▎五日預報</div>
+            <div class="forecast">
+                <div v-for="d in daily" :key="d.date" class="day">
+                    <div class="day-name">{{ d.label }}</div>
+                    <div class="day-icon">{{ wmo(d.code).icon }}</div>
+                    <div class="day-temp">
+                        <span class="hi">{{ showTemp(d.max) }}°</span>
+                        <span class="lo"> / {{ showTemp(d.min) }}°</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footnote">資料來源：Open-Meteo（免金鑰開放天氣 API）</div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const App = {
+            setup() {
+                const { ref } = Vue;
+                const query = ref('台北');
+                const place = ref('');
+                const unit = ref('C');
+                const loading = ref(false);
+                const status = ref('');
+                const isError = ref(false);
+                const current = ref(null);
+                const daily = ref([]);
+
+                const quickCities = [
+                    { name: '台北', label: '台北' },
+                    { name: '東京', label: '東京' },
+                    { name: '倫敦', label: '倫敦' },
+                    { name: '紐約', label: '紐約' },
+                ];
+
+                // Open-Meteo 地名搜尋以英文 / 拼音為主，常見中文城市名先轉成英文再查
+                const cityAlias = {
+                    '台北': 'Taipei', '臺北': 'Taipei', '新北': 'New Taipei', '桃園': 'Taoyuan',
+                    '台中': 'Taichung', '臺中': 'Taichung', '台南': 'Tainan', '臺南': 'Tainan',
+                    '高雄': 'Kaohsiung', '新竹': 'Hsinchu', '基隆': 'Keelung', '台東': 'Taitung',
+                    '東京': 'Tokyo', '大阪': 'Osaka', '京都': 'Kyoto', '名古屋': 'Nagoya',
+                    '首爾': 'Seoul', '香港': 'Hong Kong', '上海': 'Shanghai', '北京': 'Beijing',
+                    '新加坡': 'Singapore', '曼谷': 'Bangkok', '吉隆坡': 'Kuala Lumpur',
+                    '倫敦': 'London', '巴黎': 'Paris', '柏林': 'Berlin', '羅馬': 'Rome',
+                    '紐約': 'New York', '洛杉磯': 'Los Angeles', '舊金山': 'San Francisco',
+                    '雪梨': 'Sydney', '墨爾本': 'Melbourne',
+                };
+
+                // WMO 天氣代碼對應圖示與中文描述
+                const wmo = (code) => {
+                    const map = {
+                        0: ['☀️', '晴朗'], 1: ['🌤️', '大致晴朗'], 2: ['⛅', '局部多雲'], 3: ['☁️', '陰天'],
+                        45: ['🌫️', '有霧'], 48: ['🌫️', '霧淞'],
+                        51: ['🌦️', '毛毛雨'], 53: ['🌦️', '毛毛雨'], 55: ['🌧️', '強毛毛雨'],
+                        61: ['🌧️', '小雨'], 63: ['🌧️', '中雨'], 65: ['🌧️', '大雨'],
+                        71: ['🌨️', '小雪'], 73: ['🌨️', '中雪'], 75: ['❄️', '大雪'],
+                        80: ['🌦️', '陣雨'], 81: ['🌧️', '陣雨'], 82: ['⛈️', '強陣雨'],
+                        95: ['⛈️', '雷雨'], 96: ['⛈️', '雷雨夾冰雹'], 99: ['⛈️', '強雷雨'],
+                    };
+                    const e = map[code] || ['🌡️', '未知'];
+                    return { icon: e[0], text: e[1] };
+                };
+
+                const showTemp = (c) => unit.value === 'C' ? Math.round(c) : Math.round(c * 9 / 5 + 32);
+
+                const dayLabel = (dateStr, idx) => {
+                    if (idx === 0) return '今天';
+                    const names = ['日', '一', '二', '三', '四', '五', '六'];
+                    return '週' + names[new Date(dateStr).getDay()];
+                };
+
+                const search = async () => {
+                    const name = query.value;
+                    if (!name) return;
+                    loading.value = true;
+                    isError.value = false;
+                    status.value = '查詢中...';
+                    current.value = null;
+                    daily.value = [];
+                    try {
+                        // 1. 地理編碼：城市名稱 -> 經緯度（中文先轉英文再查）
+                        const lookup = cityAlias[name] || name;
+                        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(lookup)}&count=1&language=zh&format=json`;
+                        const geo = await fetch(geoUrl).then(r => r.json());
+                        if (!geo.results || !geo.results.length) {
+                            isError.value = true;
+                            status.value = `找不到「${name}」，請試試英文名稱（例如 Taipei、Tokyo）。`;
+                            return;
+                        }
+                        const loc = geo.results[0];
+                        place.value = [loc.name, loc.admin1, loc.country].filter(Boolean).join(', ');
+
+                        // 2. 取得目前天氣與五日預報
+                        const wUrl = `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}`
+                            + `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`
+                            + `&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;
+                        const w = await fetch(wUrl).then(r => r.json());
+
+                        current.value = {
+                            temp: w.current.temperature_2m,
+                            humidity: w.current.relative_humidity_2m,
+                            wind: Math.round(w.current.wind_speed_10m),
+                            code: w.current.weather_code,
+                        };
+                        daily.value = w.daily.time.map((date, i) => ({
+                            date,
+                            label: dayLabel(date, i),
+                            code: w.daily.weather_code[i],
+                            max: w.daily.temperature_2m_max[i],
+                            min: w.daily.temperature_2m_min[i],
+                        }));
+                        status.value = '';
+                    } catch (e) {
+                        isError.value = true;
+                        status.value = '查詢失敗，請稍後再試或確認網路連線。';
+                    } finally {
+                        loading.value = false;
+                    }
+                };
+
+                const searchCity = (c) => { query.value = c.name; search(); };
+
+                // 進站先載入預設城市
+                search();
+
+                return { query, place, unit, loading, status, isError, current, daily, quickCities, wmo, showTemp, search, searchCity };
+            }
+        };
+        Vue.createApp(App).mount('#app');
+    </script>
+</body>
+
+</html>

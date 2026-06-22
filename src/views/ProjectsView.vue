@@ -7,31 +7,22 @@ const router = useRouter()
 
 const projects = [
   {
-    id: 1, level: 5,
-    title: '個人作品集網站',
-    description: '以 Vue 3 + Vite 打造的響應式個人作品集，支援動態路由與深色模式。',
-    image: 'https://picsum.photos/seed/portfolio/400/250',
-    tags: ['Vue 3', 'Vite', 'RWD'],
-    githubUrl: 'https://github.com',
-    demoUrl: 'https://example.com',
-  },
-  {
     id: 2, level: 4,
     title: '任務管理 App',
-    description: '具備新增、刪除、拖曳排序與本地儲存功能的 Todo 應用程式。',
-    image: 'https://picsum.photos/seed/todo/400/250',
-    tags: ['Vue 3', 'Pinia', 'localStorage'],
-    githubUrl: 'https://github.com',
-    demoUrl: 'https://example.com',
+    description: '具備新增、刪除、拖曳排序與本地儲存功能的 Todo 應用程式，資料持久化於 localStorage。',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=400&q=80',
+    tags: ['Vue 3', '拖曳排序', 'localStorage'],
+    githubUrl: 'https://github.com/emily100390/portfolios-web',
+    demoUrl: import.meta.env.BASE_URL + 'todo.html',
   },
   {
     id: 3, level: 4,
     title: '天氣查詢儀表板',
-    description: '串接 OpenWeatherMap API，依城市名稱即時顯示天氣資訊與五日預報。',
+    description: '串接 Open-Meteo API，依城市名稱即時顯示目前天氣與五日預報，支援攝氏 / 華氏切換。',
     image: 'https://i.pinimg.com/1200x/0a/10/0c/0a100c37dbb1250297e60f5e565608e3.jpg',
     tags: ['JavaScript', 'Fetch API', 'CSS Grid'],
-    githubUrl: 'https://github.com',
-    demoUrl: 'https://example.com',
+    githubUrl: 'https://github.com/emily100390/portfolios-web',
+    demoUrl: import.meta.env.BASE_URL + 'weather.html',
   },
   {
     id: 4, level: 5,
@@ -39,7 +30,7 @@ const projects = [
     description: '報紙剪報風格的主題收藏館，可填寫調查表單、星級評分、即時統計與分類篩選，並用 Web Audio API 模擬蓋章音效。',
     image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=400&q=80',
     tags: ['Vue 3', 'Web Audio API', 'RWD'],
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'biology.html',
   },
   {
@@ -48,7 +39,7 @@ const projects = [
     description: '以 Vue Router 打造的多頁式旅遊導覽：城市列表、各城市景點、景點詳細頁，並用 Pinia 管理狀態。',
     image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=80',
     tags: ['Vue 3', 'Vue Router', 'Pinia'],
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'city-travel/index.html',
   },
   {
@@ -57,7 +48,7 @@ const projects = [
     description: '純 JavaScript 打造的色弱小遊戲：在色塊中找出顏色不同的那一格，難度逐關提升，訓練色彩辨識力。',
     image: 'https://images.unsplash.com/photo-1502691876148-a84978e59af8?auto=format&fit=crop&w=400&q=80',
     tags: ['JavaScript', 'HTML', 'CSS'],
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'color-test.html',
   },
   {
@@ -66,7 +57,7 @@ const projects = [
     description: '以 Vue 3 打造的會員資料卡，輸入即時雙向綁定，動態預覽概念藝術風格的個人化會員卡片。',
     image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=400&q=80',
     tags: ['Vue 3', 'HTML', 'CSS'],
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'member-card.html',
   },
 ]
