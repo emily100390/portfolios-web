@@ -11,7 +11,7 @@ const projects = [
     id: 2,
     title: '任務管理 App',
     description: '具備新增、刪除、拖曳排序與本地儲存功能的 Todo 應用程式，資料持久化於 localStorage。',
-    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=800&q=80',
+    image: import.meta.env.BASE_URL + 'todo-cover.jpg',
     tags: ['Vue 3', '拖曳排序', 'localStorage'],
     githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'todo.html',
@@ -27,7 +27,7 @@ const projects = [
     id: 3,
     title: '天氣查詢儀表板',
     description: '串接 Open-Meteo 免金鑰天氣 API，依城市名稱即時顯示目前天氣與五日預報，支援攝氏 / 華氏切換。',
-    image: 'https://i.pinimg.com/1200x/0a/10/0c/0a100c37dbb1250297e60f5e565608e3.jpg',
+    image: import.meta.env.BASE_URL + 'weather-cover.jpg',
     tags: ['JavaScript', 'Fetch API', 'CSS Grid'],
     githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'weather.html',
@@ -42,7 +42,7 @@ const projects = [
     id: 4,
     title: '神奇生物圖鑑',
     description: '報紙剪報風格的主題收藏館：填寫調查表單、星級評分（危險度 / 友善度）、即時統計與分類篩選，並用 Web Audio API 模擬蓋章與撕毀音效。',
-    image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=800&q=80',
+    image: import.meta.env.BASE_URL + 'biology-cover.jpg',
     tags: ['Vue 3', 'Web Audio API', 'CSS'],
     githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'biology.html',
@@ -57,7 +57,7 @@ const projects = [
     id: 5,
     title: '城市旅遊導覽',
     description: '以 Vue Router 打造的多頁式旅遊導覽網站：城市列表、各城市景點、景點詳細頁，並用 Pinia 管理狀態。',
-    image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80',
+    image: import.meta.env.BASE_URL + 'city-travel-cover.jpg',
     tags: ['Vue 3', 'Vue Router', 'Pinia'],
     githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'city-travel/index.html',
@@ -72,7 +72,7 @@ const projects = [
     id: 6,
     title: '色彩敏銳度測試',
     description: '純 JavaScript 打造的色弱小遊戲：在一片色塊中找出顏色略微不同的那一格，隨關卡提升難度，訓練色彩辨識力。',
-    image: 'https://images.unsplash.com/photo-1502691876148-a84978e59af8?auto=format&fit=crop&w=800&q=80',
+    image: import.meta.env.BASE_URL + 'color-test-cover.jpg',
     tags: ['JavaScript', 'HTML', 'CSS'],
     githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'color-test.html',
@@ -87,7 +87,7 @@ const projects = [
     id: 7,
     title: '會員資料小卡',
     description: '以 Vue 3 打造的會員資料卡：表單輸入透過雙向綁定即時更新，動態預覽概念藝術風格的個人化會員卡片。',
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80',
+    image: import.meta.env.BASE_URL + 'member-card-cover.jpg',
     tags: ['Vue 3', 'HTML', 'CSS'],
     githubUrl: 'https://github.com/emily100390/portfolios-web',
     demoUrl: import.meta.env.BASE_URL + 'member-card.html',
@@ -96,6 +96,27 @@ const projects = [
       '用 v-model 實作表單即時雙向綁定',
       '依輸入內容動態渲染卡片預覽',
       '撰寫互動樣式與 RWD 排版',
+    ],
+  },
+  {
+    id: 8,
+    title: 'Culture 藝文平台文化體驗改版提案',
+    description: '強大的聚合搜尋為核心、個人化推薦為輔，讓找藝文活動從此又快又準的團體改版提案。',
+    image: import.meta.env.BASE_URL + 'culture-cover.jpg',
+    tags: ['團體專案', 'Vue 3', 'Tailwind CSS', 'Pinia'],
+    githubUrl: 'https://github.com/Digi-Pack/NCHU-11503-iCulture',
+    demoUrl: 'https://nchu-11503-iculture.dev-hub.io/',
+    itinerary: [
+      '跨類型聚合搜尋引擎：統一索引活動、展覽、工作坊等多維度資料，一次搜尋即可涵蓋全面藝文資訊',
+      '優化資訊架構與篩選機制：重設分類體系、簡化選單層級，減少操作路徑並提升瀏覽效率',
+      '地圖一站式定位：整合地理位置資料，支援地圖檢視活動分佈，解決跨類型活動查找分散的問題',
+      '個人化推薦與視覺升級：基於用戶行為建立推薦引擎，並重構視覺設計強化文化體驗感',
+    ],
+    contributions: [
+      '詳細頁面前端開發：建立活動詳細資訊頁（活動介紹、時間地點、票務資訊等）的整體布局',
+      '台灣地圖與縣市主題頁：建立互動台灣地圖，串聯全台各縣市街頭藝人網站，優化地圖導航與跨站連接邏輯',
+      '建立頁內所需的 card UI 元件，提升頁面開發效率',
+      '圖片資源最佳化與管理：處理活動圖片下載、壓縮，確保頁面加載性能',
     ],
   },
 ]
@@ -124,10 +145,17 @@ const project = computed(() =>
       </div>
 
       <div class="retro-card">
-        <div class="section-label">▎開發流程</div>
+        <div class="section-label">▎{{ project.contributions ? '專案重點' : '開發流程' }}</div>
         <ol class="list">
           <li v-for="(step, i) in project.itinerary" :key="i">{{ step }}</li>
         </ol>
+      </div>
+
+      <div v-if="project.contributions" class="retro-card contrib-card">
+        <div class="section-label">▎我在團隊中的貢獻</div>
+        <ul class="list">
+          <li v-for="(item, i) in project.contributions" :key="i">{{ item }}</li>
+        </ul>
       </div>
 
       <div class="link-row">
@@ -215,6 +243,17 @@ const project = computed(() =>
   font-size: 0.95rem;
   margin-bottom: 0.5rem;
   color: #2A1F0E;
+}
+
+/* 團隊貢獻區塊：用主題橘做出強調感 */
+.contrib-card {
+  background: #FFF6EC;
+  border-color: #E8883A;
+  box-shadow: 3px 3px 0 #E8883A;
+}
+
+.contrib-card .section-label {
+  color: #C0651C;
 }
 
 .retro-card p {
