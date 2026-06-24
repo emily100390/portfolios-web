@@ -1,8 +1,8 @@
 <template>
-  <div class="skill-card" :class="cardColor">
+  <div class="skill-card" :class="[cardColor, { 'no-name': hideName }]">
     <img v-if="iconImg" :src="iconImg" :alt="name" class="icon-img" />
     <span v-else class="icon-text">{{ icon || name.slice(0, 2).toUpperCase() }}</span>
-    <div class="skill-name">{{ name }}</div>
+    <div v-if="!hideName" class="skill-name">{{ name }}</div>
     <div class="stars">
       <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= level }">★</span>
     </div>
@@ -16,6 +16,7 @@ defineProps({
   iconImg:     { type: String, default: '' },
   level:       { type: Number, required: true },
   cardColor:   { type: String, default: 'teal' },
+  hideName:    { type: Boolean, default: false },
 })
 </script>
 
@@ -37,6 +38,13 @@ defineProps({
   width: 47px;
   height: 47px;
   object-fit: contain;
+}
+
+/* 沒有文字的卡: 放大圖片以補足文字佔的高度, 讓整體高度與其他卡一致 */
+.skill-card.no-name .icon-img {
+  width: auto;
+  height: 72px;
+  max-width: 100%;
 }
 
 .icon-text {

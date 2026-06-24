@@ -8,6 +8,8 @@ const skills = [
   { name: 'Vue 3',      iconImg: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg',           level: 4, cardColor: 'teal' },
   { name: 'Git',        iconImg: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg',               level: 3, cardColor: 'coral' },
   { name: 'RWD',        iconImg: 'https://api.iconify.design/mdi:monitor-cellphone.svg?color=%232A1F0E',                          level: 4, cardColor: 'grey' },
+  { name: 'AutoCAD',    iconImg: 'https://api.iconify.design/simple-icons:autocad.svg?color=%23E51050',                          level: 4, cardColor: 'coral' },
+  { name: 'SOLIDWORKS', iconImg: import.meta.env.BASE_URL + 'solidworks.jpg',                                                    level: 4, cardColor: 'teal', hideName: true },
 ]
 
 const lockedSkills = [
