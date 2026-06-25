@@ -114,8 +114,8 @@ const traits = [
 /* ── 舞台 ── */
 .char-stage {
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: 390px;
+  height: 390px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,8 +142,8 @@ const traits = [
 }
 
 .char-canvas {
-  width: 400px;
-  height: 400px;
+  width: 390px;
+  height: 390px;
   display: block;
   z-index: 1;
 }
