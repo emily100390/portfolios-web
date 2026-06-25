@@ -182,7 +182,7 @@ const project = computed(() =>
   padding: 0.38rem 0.9rem;
   cursor: pointer;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-family: inherit;
   box-shadow: 2px 2px 0 #2A1F0E;
   margin-bottom: 1.25rem;
@@ -258,7 +258,7 @@ const project = computed(() =>
 
 .retro-card p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.6;
   color: #3D2B1F;
 }
@@ -266,8 +266,8 @@ const project = computed(() =>
 .list {
   margin: 0;
   padding-left: 1.3rem;
-  font-size: 0.9rem;
-  line-height: 2;
+  font-size: 1rem;
+  line-height: 1.9;
   color: #3D2B1F;
 }
 
@@ -285,7 +285,7 @@ const project = computed(() =>
   border-radius: 8px;
   text-decoration: none;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   background: #FAF3E0;
   color: #2A1F0E;
   box-shadow: 3px 3px 0 #2A1F0E;

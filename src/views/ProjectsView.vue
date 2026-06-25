@@ -106,7 +106,7 @@ function handleToggleFavorite(id) {
 
 <style scoped>
 .projects-view {
-  max-width: 680px;
+  max-width: 1080px;
   margin: 0 auto 2rem;
   padding: 0 1rem;
 }
@@ -140,8 +140,16 @@ function handleToggleFavorite(id) {
 }
 
 .projects-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* ── RWD：窄螢幕回到單欄 ── */
+@media (max-width: 760px) {
+  .projects-list {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
 }
 </style>

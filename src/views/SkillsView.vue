@@ -51,7 +51,7 @@ const lockedSkills = [
 
 <style scoped>
 .skills-view {
-  max-width: 680px;
+  max-width: 1080px;
   margin: 0 auto 2rem;
   padding: 0 1rem;
 }
@@ -87,8 +87,22 @@ const lockedSkills = [
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* ── RWD：平板 3 欄、手機 2 欄 ── */
+@media (max-width: 760px) {
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ── locked card ── */
@@ -132,7 +146,7 @@ const lockedSkills = [
 
 .locked-name {
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   color: #4a3a2a;
 }
 

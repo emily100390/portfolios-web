@@ -15,37 +15,6 @@
       >{{ trait.label }}</div>
     </div>
 
-    <!-- 按鈕 -->
-    <div class="btn-wrap">
-      <button class="btn-more" @click="showExp = !showExp">
-        {{ showExp ? '▲ 收起經歷' : '了解更多 ▼' }}
-      </button>
-    </div>
-
-    <!-- 職涯經歷面板 -->
-    <Transition name="slide-down">
-      <div v-if="showExp" class="exp-panel">
-        <div class="exp-header">— 職涯歷程 —</div>
-        <div v-for="(exp, i) in experiences" :key="i" class="exp-item">
-          <div class="exp-left">
-            <div class="exp-icon">{{ exp.icon }}</div>
-            <div class="exp-line" v-if="i < experiences.length - 1"></div>
-          </div>
-          <div class="exp-body">
-            <div class="exp-period">{{ exp.period }}</div>
-            <div class="exp-role">{{ exp.role }}</div>
-            <div class="exp-company">@ {{ exp.company }}</div>
-            <p class="exp-desc">{{ exp.desc }}</p>
-          </div>
-        </div>
-
-        <!-- 面板底部收起按鈕，讀完可就近收合 -->
-        <div class="exp-footer">
-          <button class="btn-collapse" @click="showExp = false">▲ 收起經歷</button>
-        </div>
-      </div>
-    </Transition>
-
   </div>
 </template>
 
@@ -54,12 +23,11 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
-const showExp = ref(false)
 const canvasRef = ref(null)
 
 let renderer, scene, camera, animId, model
 
-const CANVAS_SIZE = 300
+const CANVAS_SIZE = 400
 
 onMounted(() => {
   const canvas = canvasRef.value
@@ -129,30 +97,6 @@ const traits = [
   { label: '實作派', pos: 'br' },
   { label: '好合作', pos: 'bl' },
 ]
-
-const experiences = [
-  {
-    period: '2013 – 2016',
-    role: '機械繪圖員',
-    company: '機械設備製造業',
-    desc: '使用 AutoCAD 進行 2D 零件圖與工程圖面製作，負責尺寸公差審核，配合工程師進行設計改善與文件管理。',
-    icon: '⚙️',
-  },
-  {
-    period: '2016 – 2025',
-    role: '逐漸資深機械繪圖員',
-    company: '精密零件加工廠',
-    desc: '協助生產文件管理、跨部門溝通協調，累積製造流程與品質管控的實務經驗。',
-    icon: '🔧',
-  },
-  {
-    period: '2026 – 至今',
-    role: '前端工程師（轉職進行中）',
-    company: '自學 & 作品集累積',
-    desc: '全力投入前端技術學習：Vue 3、JavaScript ES6+、RWD、Git，以實作專案驗證學習成果。',
-    icon: '💻',
-  },
-]
 </script>
 
 <style scoped>
@@ -170,8 +114,8 @@ const experiences = [
 /* ── 舞台 ── */
 .char-stage {
   position: relative;
-  width: 320px;
-  height: 320px;
+  width: 400px;
+  height: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -198,144 +142,10 @@ const experiences = [
 }
 
 .char-canvas {
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
   display: block;
   z-index: 1;
-}
-
-/* ── 按鈕 ── */
-.btn-wrap {
-  display: flex;
-  justify-content: center;
-}
-
-.btn-more {
-  background: #FAF3E0;
-  border: 2px solid #2A1F0E;
-  border-radius: 6px;
-  padding: 0.42rem 1.2rem;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 0.86rem;
-  font-family: inherit;
-  box-shadow: 2px 2px 0 #2A1F0E;
-  transition: all 0.1s;
-}
-
-.btn-more:hover {
-  background: #2A1F0E;
-  color: #FAF3E0;
-  box-shadow: none;
-  transform: translate(2px, 2px);
-}
-
-/* ── 經歷面板 ── */
-.exp-panel {
-  width: 100%;
-  background: #FAF3E0;
-  border: 2px solid #2A1F0E;
-  border-radius: 10px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 4px 4px 0 #2A1F0E;
-}
-
-.exp-header {
-  text-align: center;
-  font-weight: 900;
-  font-size: 0.9rem;
-  letter-spacing: 0.18em;
-  color: #5A4A30;
-  margin-bottom: 1.25rem;
-}
-
-.exp-item {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.1rem;
-}
-
-.exp-item:last-child { margin-bottom: 0; }
-
-.exp-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.exp-icon {
-  width: 36px;
-  height: 36px;
-  background: #F2E6C9;
-  border: 2px solid #2A1F0E;
-  border-radius: 50%;
-  box-shadow: 2px 2px 0 #2A1F0E;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-}
-
-.exp-line {
-  flex: 1;
-  width: 2px;
-  background: rgba(42, 31, 14, 0.18);
-  margin: 5px 0;
-  min-height: 20px;
-}
-
-.exp-period {
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: #E8883A;
-  margin-bottom: 0.1rem;
-}
-
-.exp-role {
-  font-size: 0.95rem;
-  font-weight: 900;
-  margin-bottom: 0.08rem;
-}
-
-.exp-company {
-  font-size: 0.76rem;
-  color: #7A6A50;
-  margin-bottom: 0.3rem;
-}
-
-.exp-desc {
-  margin: 0;
-  font-size: 0.82rem;
-  line-height: 1.55;
-  color: #3D2B1F;
-}
-
-/* ── 面板底部收起按鈕 ── */
-.exp-footer {
-  display: flex;
-  justify-content: center;
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1.5px dashed rgba(42, 31, 14, 0.25);
-}
-
-.btn-collapse {
-  background: transparent;
-  border: 2px solid #2A1F0E;
-  border-radius: 6px;
-  padding: 0.38rem 1.1rem;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 0.82rem;
-  font-family: inherit;
-  color: #2A1F0E;
-  transition: all 0.1s;
-}
-
-.btn-collapse:hover {
-  background: #2A1F0E;
-  color: #FAF3E0;
 }
 
 /* ── 人格特質球 ── */
@@ -376,18 +186,6 @@ const experiences = [
   50%       { transform: translateY(-7px); }
 }
 
-/* ── Transition ── */
-.slide-down-enter-active,
-.slide-down-leave-active {
-  transition: opacity 0.28s ease, transform 0.28s ease;
-}
-
-.slide-down-enter-from,
-.slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
 /* ── RWD：小螢幕縮小 3D 舞台，避免超出畫面 ── */
 @media (max-width: 360px) {
   .char-stage {
@@ -409,6 +207,5 @@ const experiences = [
   .trait-tr, .trait-br { right: 8px; }
   .trait-tl, .trait-tr { top: 8px; }
   .trait-bl, .trait-br { bottom: 8px; }
-  .exp-panel { padding: 1rem 1.1rem; }
 }
 </style>

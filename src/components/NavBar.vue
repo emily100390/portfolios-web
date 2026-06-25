@@ -13,6 +13,7 @@
       <RouterLink to="/">首頁</RouterLink>
       <RouterLink to="/skills">技能</RouterLink>
       <RouterLink to="/projects">作品</RouterLink>
+      <RouterLink to="/resume">履歷</RouterLink>
     </nav>
   </header>
 </template>
@@ -62,7 +63,7 @@
   font-weight: 700;
   padding: 0.45rem 1.6rem;
   border-right: 1px solid #2A1F0E;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   transition: background 0.12s;
 }
 

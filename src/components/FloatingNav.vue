@@ -8,6 +8,7 @@ const links = [
   { to: '/',         label: '首頁', icon: '🏠' },
   { to: '/skills',   label: '技能', icon: '⚡' },
   { to: '/projects', label: '作品', icon: '🎮' },
+  { to: '/resume',   label: '履歷', icon: '📄' },
 ]
 
 const toggle = () => { open.value = !open.value }
@@ -47,10 +48,12 @@ const close = () => { open.value = false }
 <style scoped>
 .fab-root {
   position: fixed;
-  /* 桌機：浮在右下空白區，離右邊緣有距離，固定於畫面 */
-  /* 在原比例基礎上，往右、往下各移 1.5 顆按鈕（56px × 1.5 = 84px） */
-  right: calc(28% - 84px);
-  bottom: calc(32% - 84px);
+  /* 桌機：固定在「內容右側的留白區」，不覆蓋內容。
+     以全站最寬內容 1180px 為基準，算出右側 gutter，
+     再讓按鈕貼在內容右緣外側；留白不足時用 max() 退回貼右邊緣。 */
+  top: 80%;
+  transform: translateY(10%);
+  right: max(1rem, calc((100% - 1180px) / 2 - 64px));
   z-index: 200;
 }
 

@@ -38,16 +38,16 @@ const emit = defineEmits(['view-detail', 'toggle-favorite'])
   background: #FAF3E0;
   border: 2px solid #2A1F0E;
   border-radius: 10px;
-  padding: 1rem 1.25rem;
+  padding: 1.2rem 1.5rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
   box-shadow: 3px 3px 0 #2A1F0E;
 }
 
 .card-img {
-  width: 90px;
-  height: 65px;
+  width: 144px;
+  height: 104px;
   object-fit: cover;
   border: 2px solid #2A1F0E;
   border-radius: 6px;
@@ -57,16 +57,16 @@ const emit = defineEmits(['view-detail', 'toggle-favorite'])
 .card-left { flex: 1; min-width: 0; }
 
 .card-title {
-  margin: 0 0 0.3rem;
-  font-size: 0.98rem;
+  margin: 0 0 0.36rem;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 
 .card-desc {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.6rem;
   color: #5A4A30;
-  font-size: 0.8rem;
-  line-height: 1.45;
+  font-size: 1.05rem;
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -75,14 +75,14 @@ const emit = defineEmits(['view-detail', 'toggle-favorite'])
 
 .stars { display: flex; gap: 2px; }
 
-.star       { font-size: 0.88rem; color: #D4C5A0; }
+.star       { font-size: 1.05rem; color: #D4C5A0; }
 .star.filled { color: #F5C518; }
 
 .card-right {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   flex-shrink: 0;
 }
 
@@ -90,10 +90,10 @@ const emit = defineEmits(['view-detail', 'toggle-favorite'])
   background: #FAF3E0;
   border: 2px solid #2A1F0E;
   border-radius: 6px;
-  padding: 0.38rem 0.85rem;
+  padding: 0.46rem 1rem;
   cursor: pointer;
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 1.05rem;
   font-family: inherit;
   box-shadow: 2px 2px 0 #2A1F0E;
   white-space: nowrap;
@@ -111,7 +111,7 @@ const emit = defineEmits(['view-detail', 'toggle-favorite'])
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   line-height: 1;
 }
 
@@ -125,8 +125,8 @@ const emit = defineEmits(['view-detail', 'toggle-favorite'])
     width: 72px;
     height: 56px;
   }
-  .card-title { font-size: 0.92rem; }
-  .card-desc { font-size: 0.76rem; }
+  .card-title { font-size: 1rem; }
+  .card-desc { font-size: 0.85rem; }
   .btn-view {
     padding: 0.35rem 0.6rem;
     font-size: 0.78rem;

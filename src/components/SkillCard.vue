@@ -55,7 +55,7 @@ defineProps({
 
 .skill-name {
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   color: #2A1F0E;
 }
 
