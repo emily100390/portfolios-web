@@ -347,6 +347,11 @@ function onCardClick(i) {
 .dot.on { background: #E8883A; }
 
 /* ── RWD ── */
+/* 平板/手機：螢幕窄，側邊卡片會大幅溢出撐爆版面，這裡把舞台裁切住 */
+@media (max-width: 768px) {
+  .stage { overflow: hidden; }
+}
+
 @media (max-width: 560px) {
   .stage { height: 250px; }
   .slide { width: 276px; }
