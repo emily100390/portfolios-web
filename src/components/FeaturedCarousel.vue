@@ -206,7 +206,10 @@ function onCardClick(i) {
   position: relative;
   width: 91%;
   height: 384px;
-  /* overflow: hidden; */
+  /* 必須裁切：側邊卡片以卡片寬百分比位移會溢出舞台，
+     body 的 overflow-x:hidden 對 3D transform 子元素擋不乾淨，
+     這裡裁切才能徹底避免橫向捲軸（景深仍由 translateZ/rotateY 呈現）。 */
+  overflow: hidden;
   perspective: 1200px;
   transform-style: preserve-3d;
 }
@@ -224,7 +227,7 @@ function onCardClick(i) {
 }
 
 .frame {
-  background: #FAF3E0;
+  background: #6d3f10;
   border: 3px solid #2A1F0E;
   border-radius: 16px;
   box-shadow: 7px 7px 0 #2A1F0E;
@@ -347,11 +350,6 @@ function onCardClick(i) {
 .dot.on { background: #E8883A; }
 
 /* ── RWD ── */
-/* 平板/手機：螢幕窄，側邊卡片會大幅溢出撐爆版面，這裡把舞台裁切住 */
-@media (max-width: 768px) {
-  .stage { overflow: hidden; }
-}
-
 @media (max-width: 560px) {
   .stage { height: 250px; }
   .slide { width: 276px; }
