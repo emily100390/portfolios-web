@@ -34,7 +34,9 @@ onMounted(() => {
 
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-  renderer.setSize(CANVAS_SIZE, CANVAS_SIZE)
+  // 第三參數 updateStyle=false：不寫入 canvas 行內 width/height，
+  // 改由 CSS（width/height: 100%）控制顯示尺寸，內部緩衝維持 400px 後縮放
+  renderer.setSize(CANVAS_SIZE, CANVAS_SIZE, false)
   renderer.outputColorSpace = THREE.SRGBColorSpace
 
   scene = new THREE.Scene()
@@ -112,10 +114,13 @@ const traits = [
 }
 
 /* ── 舞台 ── */
+/* 寬度跟著容器流動（上限 390px），以正方形比例維持高度，
+   確保任何手機寬度都不會超出畫面、產生橫向捲軸 */
 .char-stage {
   position: relative;
-  width: 390px;
-  height: 390px;
+  width: 100%;
+  max-width: 390px;
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,22 +133,22 @@ const traits = [
 }
 
 .ring-a {
-  width: 314px;
-  height: 314px;
+  width: 80.5%;  /* 314 / 390 */
+  height: 80.5%;
   border: 3px dashed rgba(232, 136, 58, 0.75);
   animation: spin-cw 7s linear infinite;
 }
 
 .ring-b {
-  width: 272px;
-  height: 272px;
+  width: 69.7%;  /* 272 / 390 */
+  height: 69.7%;
   border: 2px dashed rgba(42, 31, 14, 0.22);
   animation: spin-ccw 5s linear infinite;
 }
 
 .char-canvas {
-  width: 390px;
-  height: 390px;
+  width: 100%;
+  height: 100%;
   display: block;
   z-index: 1;
 }
@@ -186,18 +191,8 @@ const traits = [
   50%       { transform: translateY(-7px); }
 }
 
-/* ── RWD：小螢幕縮小 3D 舞台，避免超出畫面 ── */
+/* ── RWD：極小螢幕縮小特質球並貼齊角落（舞台已隨容器自動縮放）── */
 @media (max-width: 360px) {
-  .char-stage {
-    width: 280px;
-    height: 280px;
-  }
-  .char-canvas {
-    width: 260px !important;
-    height: 260px !important;
-  }
-  .ring-a { width: 274px; height: 274px; }
-  .ring-b { width: 236px; height: 236px; }
   .trait-ball {
     width: 56px;
     height: 56px;
